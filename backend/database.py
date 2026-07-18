@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date, datetime
 
 DATABASE = "health.db"
 
@@ -27,7 +28,6 @@ def create_tables():
         conditions TEXT,
         medications TEXT,
         allergies TEXT
-
     )
     """)
 
@@ -39,7 +39,6 @@ def create_tables():
         water REAL,
         sleep REAL,
         exercise INTEGER
-
     )
     """)
 
@@ -55,7 +54,6 @@ def create_tables():
         exercise INTEGER,
 
         mood TEXT
-
     )
     """)
 
@@ -69,12 +67,14 @@ def create_tables():
         message TEXT,
 
         timestamp TEXT
-
     )
     """)
 
     conn.commit()
     conn.close()
+
+
+# ---------------- PROFILE ----------------
 
 def save_profile(profile):
 
@@ -110,6 +110,8 @@ def save_profile(profile):
 
     conn.commit()
     conn.close()
+
+
 def get_profile():
 
     conn = get_connection()
@@ -135,35 +137,9 @@ def get_profile():
 
     return profile
 
-from datetime import date
 
+# ---------------- GOALS ----------------
 
-def save_daily_log(log):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    INSERT INTO daily_logs
-    (
-        date,
-        sleep,
-        water,
-        exercise,
-        mood
-    )
-    VALUES (?, ?, ?, ?, ?)
-    """,
-    (
-        str(date.today()),
-        log.sleep,
-        log.water,
-        log.exercise,
-        log.mood
-    ))
-
-    conn.commit()
-    conn.close()
 def save_goals(goal):
 
     conn = get_connection()
@@ -209,3 +185,262 @@ def get_goals():
     conn.close()
 
     return goals
+
+
+# ---------------- DAILY LOG ----------------
+
+def save_daily_log(log):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO daily_logs
+    (
+        date,
+        sleep,
+        water,
+        exercise,
+        mood
+    )
+    VALUES (?, ?, ?, ?, ?)
+    """,
+    (
+        str(date.today()),
+        log.sleep,
+        log.water,
+        log.exercise,
+        log.mood
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_today_log():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        sleep,
+        water,
+        exercise,
+        mood
+    FROM daily_logs
+    WHERE date = ?
+    ORDER BY id DESC
+    LIMIT 1
+    """, (str(date.today()),))
+
+    log = cursor.fetchone()
+
+    conn.close()
+
+    return log
+
+
+# ---------------- CHAT HISTORY ----------------
+
+def save_chat(role, message):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    INSERT INTO chat_history
+    (
+        role,
+        message,
+        timestamp
+    )
+    VALUES (?, ?, ?)
+    """,
+    (
+        role,
+        message,
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_chat_history(limit=10):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        role,
+        message
+    FROM chat_history
+    ORDER BY id DESC
+    LIMIT ?
+    """, (limit,))
+
+    history = cursor.fetchall()
+
+    conn.close()
+
+    history.reverse()
+
+    return history
+def get_days_logged():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT COUNT(DISTINCT date)
+    FROM daily_logs
+    """)
+
+    days = cursor.fetchone()[0]
+
+    conn.close()
+
+    return days
+def get_progress_data():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        date,
+        sleep,
+        water,
+        exercise
+    FROM daily_logs
+    ORDER BY date
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return {
+
+        "dates": [row[0] for row in rows],
+
+        "sleep": [row[1] for row in rows],
+
+        "water": [row[2] for row in rows],
+
+        "exercise": [row[3] for row in rows]
+    }
+def get_all_logs():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        date,
+        sleep,
+        water,
+        exercise,
+        mood
+    FROM daily_logs
+    ORDER BY date
+    """)
+
+    logs = cursor.fetchall()
+
+    conn.close()
+
+    return logs
+
+def calculate_health_score():
+
+    goals = get_goals()
+    today = get_today_log()
+
+    if goals is None or today is None:
+        return None
+
+    sleep_goal = goals[1]
+    water_goal = goals[0]
+    exercise_goal = goals[2]
+
+    sleep = today[0]
+    water = today[1]
+    exercise = today[2]
+
+    sleep_score = min((sleep / sleep_goal) * 40, 40)
+    water_score = min((water / water_goal) * 30, 30)
+    exercise_score = min((exercise / exercise_goal) * 30, 30)
+
+    score = round(sleep_score + water_score + exercise_score, 1)
+
+    return score
+
+def get_health_score_history():
+
+    goals = get_goals()
+
+    if goals is None:
+        return []
+
+    water_goal = goals[0]
+    sleep_goal = goals[1]
+    exercise_goal = goals[2]
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    SELECT
+        date,
+        sleep,
+        water,
+        exercise
+    FROM daily_logs
+    ORDER BY date
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    history = []
+
+    for row in rows:
+
+        score = (
+            min((row[1] / sleep_goal) * 40, 40)
+            +
+            min((row[2] / water_goal) * 30, 30)
+            +
+            min((row[3] / exercise_goal) * 30, 30)
+        )
+
+        history.append({
+
+            "date": row[0],
+
+            "score": round(score, 1)
+
+        })
+
+    return history
+
+def get_health_improvement():
+
+    history = get_health_score_history()
+
+    if len(history) < 2:
+        return 0
+
+    first = history[0]["score"]
+    latest = history[-1]["score"]
+
+    if first == 0:
+        return 0
+
+    improvement = ((latest - first) / first) * 100
+
+    return round(improvement, 1)
