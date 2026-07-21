@@ -1,0 +1,237 @@
+.page{
+    height:calc(100vh - 78px);
+    display:flex;
+    flex-direction:column;
+    background:#f6f8fb;
+    padding:30px;
+    overflow:hidden;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.chat{
+
+    flex:1;
+
+    background:white;
+
+    border-radius:28px;
+
+    padding:28px;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+.chat h2{
+
+margin-top:0;
+
+font-size:34px;
+
+}
+
+.chat p{
+
+color:#666;
+
+font-size:18px;
+
+}
+
+.quick{
+
+display:flex;
+
+gap:12px;
+
+flex-wrap:wrap;
+
+margin-top:20px;
+
+margin-bottom:30px;
+
+}
+
+.quick button{
+
+border:none;
+
+background:#eef4ff;
+
+padding:14px 18px;
+
+border-radius:999px;
+
+cursor:pointer;
+
+font-size:15px;
+
+font-weight:600;
+
+transition:.2s;
+
+}
+
+.quick button:hover{
+
+background:#dbe8ff;
+
+}
+
+.user{
+
+align-self:flex-end;
+
+background:#2563eb;
+
+color:white;
+
+padding:16px 20px;
+
+border-radius:22px 22px 6px 22px;
+
+margin-top:15px;
+
+max-width:70%;
+
+font-size:16px;
+
+}
+
+.bot{
+
+align-self:flex-start;
+
+background:#f2f4f8;
+
+padding:16px 20px;
+
+border-radius:22px 22px 22px 6px;
+
+margin-top:15px;
+
+max-width:70%;
+
+font-size:16px;
+
+}
+
+.bottom{
+
+margin-top:20px;
+
+}
+
+.inputRow{
+
+display:flex;
+
+gap:12px;
+
+}
+
+.voice{
+
+width:60px;
+
+height:60px;
+
+border-radius:18px;
+
+border:none;
+
+background:white;
+
+font-size:22px;
+
+cursor:pointer;
+
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+}
+
+.input{
+
+flex:1;
+
+border:none;
+
+background:white;
+
+border-radius:18px;
+
+padding:18px;
+
+font-size:17px;
+
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+outline:none;
+
+}
+
+.send{
+
+border:none;
+
+background:#2563eb;
+
+color:white;
+
+padding:0 28px;
+
+border-radius:18px;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+.disclaimer{
+
+margin-top:12px;
+
+text-align:center;
+
+font-size:13px;
+
+color:#8a8a8a;
+
+}
+
+@media(max-width:900px){
+
+.dashboard{
+
+display:flex;
+
+overflow-x:auto;
+
+}
+
+.chat{
+
+padding:22px;
+
+}
+
+.page{
+
+padding:15px;
+
+}
+
+}

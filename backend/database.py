@@ -8,7 +8,7 @@ def get_connection():
     return sqlite3.connect(DATABASE)
 
 
-def create_tables():
+
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -30,6 +30,29 @@ def create_tables():
         allergies TEXT
     )
     """)
+def create_tables():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS profile (
+
+        id INTEGER PRIMARY KEY,
+
+        name TEXT,
+        age INTEGER,
+        gender TEXT,
+
+        height REAL,
+        weight REAL,
+
+        conditions TEXT,
+        medications TEXT,
+        allergies TEXT
+
+    )
+    """)
 
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS goals (
@@ -39,6 +62,7 @@ def create_tables():
         water REAL,
         sleep REAL,
         exercise INTEGER
+
     )
     """)
 
@@ -54,6 +78,7 @@ def create_tables():
         exercise INTEGER,
 
         mood TEXT
+
     )
     """)
 
@@ -63,16 +88,14 @@ def create_tables():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
 
         role TEXT,
-
         message TEXT,
-
         timestamp TEXT
+
     )
     """)
 
     conn.commit()
     conn.close()
-
 
 # ---------------- PROFILE ----------------
 
@@ -322,16 +345,24 @@ def get_progress_data():
 
     conn.close()
 
-    return {
+    progress = []
 
-        "dates": [row[0] for row in rows],
+    for row in rows:
 
-        "sleep": [row[1] for row in rows],
+        progress.append({
 
-        "water": [row[2] for row in rows],
+            "date": row[0],
 
-        "exercise": [row[3] for row in rows]
-    }
+            "sleep": row[1],
+
+            "water": row[2],
+
+            "exercise": row[3]
+
+        })
+
+    return progress
+
 def get_all_logs():
 
     conn = get_connection()
@@ -360,29 +391,27 @@ def calculate_health_score():
     today = get_today_log()
 
     if goals is None or today is None:
-        return None
+        return 0
 
     sleep_goal = goals[1]
     water_goal = goals[0]
     exercise_goal = goals[2]
 
-    sleep = today[0]
-    water = today[1]
-    exercise = today[2]
-
-    sleep_score = min((sleep / sleep_goal) * 40, 40)
-    water_score = min((water / water_goal) * 30, 30)
-    exercise_score = min((exercise / exercise_goal) * 30, 30)
-
-    score = round(sleep_score + water_score + exercise_score, 1)
-
-    return score
+    if sleep_goal == 0 or water_goal == 0 or exercise_goal == 0:
+        return 0
 
 def get_health_score_history():
 
     goals = get_goals()
 
     if goals is None:
+        return []
+
+    water_goal = goals[0]
+    sleep_goal = goals[1]
+    exercise_goal = goals[2]
+
+    if water_goal == 0 or sleep_goal == 0 or exercise_goal == 0:
         return []
 
     water_goal = goals[0]
@@ -444,3 +473,15 @@ def get_health_improvement():
     improvement = ((latest - first) / first) * 100
 
     return round(improvement, 1)
+
+def reset_user_data():
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM daily_logs")
+    cursor.execute("DELETE FROM goals")
+    cursor.execute("DELETE FROM profile")
+
+    conn.commit()
+    conn.close()

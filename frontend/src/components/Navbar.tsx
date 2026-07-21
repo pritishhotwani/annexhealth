@@ -1,28 +1,50 @@
-import { Link } from "react-router-dom";
-import "./Navbar.css";
+import styles from "./Navbar.module.css";
 
-function Navbar() {
+import assistantLogo from "../assets/images/annex-assistant.png";
+
+export default function Navbar() {
+
+  const today = new Date();
+
+  const formattedDate = today.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <nav className="navbar">
-      <div className="logo">Annex Health</div>
+    <header className={styles.navbar}>
 
-      <div className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/daily-log">Daily Log</Link>
-        <Link to="/goals">Goals</Link>
-        <Link to="/profile">Profile</Link>
+      <div className={styles.left}>
 
-        <a
-          href="https://forms.gle/zuocRHCBeygcRGWZ8"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Feedback
-        </a>
+        <img
+          src={assistantLogo}
+          alt="Annex Assistant"
+          className={styles.logo}
+        />
+
+        <div>
+
+          <h2>Annex Assistant</h2>
+
+          <p>Your Personal Health Companion</p>
+
+        </div>
+
       </div>
-    </nav>
-  );
-}
 
-export default Navbar;
+      <div className={styles.right}>
+
+        <p className={styles.date}>
+
+          {formattedDate}
+
+        </p>
+
+      </div>
+
+    </header>
+  );
+
+}

@@ -1,0 +1,116 @@
+.page{
+    width:100%;
+    min-height:100vh;
+    background:#FBFBFC;
+    padding:32px;
+    box-sizing:border-box;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.container h1{
+    margin:0;
+    font-size:32px;
+    color:#1A1C1E;
+}
+
+.container p{
+    margin-top:10px;
+    color:#70777F;
+    line-height:1.7;
+}
+
+.uploadArea{
+    margin-top:30px;
+    background:#FFFFFF;
+    border:2px dashed #C8CED6;
+    border-radius:12px;
+    padding:60px;
+    text-align:center;
+}
+
+.uploadButton{
+    background:#2D6CDF;
+    color:white;
+    border:none;
+    padding:14px 28px;
+    font-size:15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.uploadButton:hover{
+    background:#2359BA;
+}
+
+.file{
+    margin-top:20px;
+    padding:15px;
+    background:#F4F6F8;
+    border-radius:8px;
+    border:1px solid #D8DDE3;
+    color:#1A1C1E;
+}
+
+.analyseButton{
+    margin-top:24px;
+    background:#1A1C1E;
+    color:white;
+    border:none;
+    padding:15px 30px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.analyseButton:hover{
+    background:#303437;
+}
+
+.analyseButton:disabled{
+    background:#A5AAB0;
+    cursor:not-allowed;
+}
+
+.result{
+    margin-top:35px;
+    background:white;
+    border:1px solid #D8DDE3;
+    border-radius:12px;
+    padding:28px;
+}
+
+.result h2{
+    margin:0 0 18px;
+    color:#1A1C1E;
+}
+
+.result p{
+    white-space:pre-wrap;
+    line-height:1.8;
+    color:#444;
+}
+
+.loading{
+    margin-top:18px;
+    color:#70777F;
+}
+
+@media(max-width:900px){
+
+.page{
+    padding:18px;
+}
+
+.uploadArea{
+    padding:35px 20px;
+}
+
+.container h1{
+    font-size:26px;
+}
+
+}

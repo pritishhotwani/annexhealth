@@ -327,3 +327,80 @@ Recommend consulting a healthcare professional if symptoms sound serious.
 """
 
     return ask_annex(prompt)
+
+def annex_blood_report(report_text: str):
+
+    prompt = f"""
+You are Annex Health AI.
+
+You are analysing a patient's blood report.
+
+The following text was extracted using OCR.
+
+Blood Report
+====================================================
+
+{report_text}
+
+====================================================
+
+Write a professional report using the EXACT sections below.
+
+# Overall Status
+
+Briefly summarise the overall condition.
+
+# Normal Findings
+
+Mention all values that appear normal.
+
+# Abnormal Findings
+
+Mention every abnormal value detected.
+
+For each abnormal value explain:
+
+- What it is
+- Why it matters
+- Possible causes
+
+# Lifestyle Recommendations
+
+Provide practical lifestyle advice.
+
+# Diet Recommendations
+
+Recommend foods that may help improve the abnormal values.
+
+# Exercise Recommendations
+
+Recommend suitable exercise if appropriate.
+
+# When Should They Visit A Doctor?
+
+Explain when medical attention is recommended.
+
+# Risk Level
+
+Choose ONLY one:
+
+Low
+
+Moderate
+
+High
+
+====================================================
+
+Rules
+
+- Never invent blood values.
+- If a value is missing, state that it was not detected.
+- Never diagnose diseases with certainty.
+- Explain medical terms in simple language.
+- Keep the language suitable for non-medical users.
+- End with a reminder that this AI is not a replacement for a healthcare professional.
+
+"""
+
+    return ask_annex(prompt)

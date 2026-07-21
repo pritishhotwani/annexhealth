@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, UploadFile, File
+from ocr import extract_text
 
 from annex import (
     annex_chat,
+    annex_blood_report,
     generate_health_report
 )
 
@@ -25,9 +28,9 @@ from database import (
     get_progress_data,
     calculate_health_score,
     get_health_score_history,
-    get_health_improvement
+    get_health_improvement,
+    reset_user_data
 )
-
 app = FastAPI(
     title="Annex Health AI",
     version="1.0.0"
@@ -35,12 +38,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 create_tables()
 
 
@@ -63,18 +68,18 @@ def chat(request: ChatRequest):
         "response": reply
     }
 
-
 # ---------------- PROFILE ----------------
 
 @app.post("/profile")
 def profile(profile: Profile):
+
+    reset_user_data()
 
     save_profile(profile)
 
     return {
         "message": "Profile Saved Successfully"
     }
-
 
 # ---------------- GOALS ----------------
 
@@ -151,5 +156,19 @@ def health_report():
     return {
 
         "report": report
+
+    }
+# ---------------- BLOOD REPORT ----------------
+
+@app.post("/analyse-report")
+async def analyse_report(file: UploadFile = File(...)):
+
+    extracted_text = extract_text(file)
+
+    analysis = annex_blood_report(extracted_text)
+
+    return {
+
+        "analysis": analysis
 
     }
