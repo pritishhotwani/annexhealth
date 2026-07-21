@@ -1,17 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import styles from "./Onboarding.module.css";
 
-interface Props {
-  onComplete: () => void;
-}
 
-export default function Onboarding({
+export default function Onboarding() {
 
-     onComplete,
-    }: Props) {
-
-  const navigate = useNavigate();
+ 
 
   const [step, setStep] = useState(1);
 
