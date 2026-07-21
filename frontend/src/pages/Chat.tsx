@@ -19,14 +19,13 @@ export default function Chat() {
 
   const [profile, setProfile] = useState<Profile>({});
 
-  const [messages, setMessages] = useState<Message>([
-    {
-      sender: "ai",
-      text:
-        "Welcome to Annex Health AI.\n\nYour health profile has been loaded successfully.\n\nHow are you feeling today?",
-    },
-  ] as any);
-
+  const [messages, setMessages] = useState<Message[]>([
+  {
+    sender: "ai",
+    text:
+      "Welcome to Annex Health AI.\n\nYour health profile has been loaded successfully.\n\nHow are you feeling today?",
+  },
+]);
   const [input, setInput] = useState("");
 
   const [loading, setLoading] = useState(false);
