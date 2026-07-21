@@ -29,15 +29,8 @@ function App() {
   }, []);
 
   if (!profileCompleted) {
-
-    return (
-      <Onboarding
-        onComplete={() => setProfileCompleted(true)}
-      />
-    );
-
+  return <Onboarding />;
   }
-
   return (
     <Routes>
 
