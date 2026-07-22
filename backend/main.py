@@ -1,7 +1,7 @@
-from fastapi import FastAPI, UploadFile, File
+
 from fastapi.middleware.cors import CORSMiddleware
 
-from ocr import extract_text
+
 
 from annex import (
     annex_chat,
@@ -160,15 +160,3 @@ def health_report():
     }
 
 
-# ---------------- BLOOD REPORT OCR ----------------
-
-@app.post("/analyse-report")
-async def analyse_report(file: UploadFile = File(...)):
-
-    extracted_text = extract_text(file)
-
-    analysis = annex_blood_report(extracted_text)
-
-    return {
-        "analysis": analysis
-    }
