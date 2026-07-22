@@ -1,6 +1,6 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+
 from ocr import extract_text
 
 from annex import (
@@ -31,27 +31,18 @@ from database import (
     get_health_improvement,
     reset_user_data
 )
+
 app = FastAPI(
     title="Annex Health AI",
     version="1.0.0"
 )
 
-from fastapi.middleware.cors import CORSMiddleware
+# ---------------- CORS ----------------
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://annexhealthai.vercel.app",
-        "http://localhost:5173"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
     ],
@@ -59,12 +50,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ---------------- DATABASE ----------------
+
 create_tables()
 
 
+# ---------------- HOME ----------------
+
 @app.get("/")
 def home():
-
     return {
         "message": "Annex Health AI Backend Running"
     }
@@ -81,6 +76,7 @@ def chat(request: ChatRequest):
         "response": reply
     }
 
+
 # ---------------- PROFILE ----------------
 
 @app.post("/profile")
@@ -93,6 +89,7 @@ def profile(profile: Profile):
     return {
         "message": "Profile Saved Successfully"
     }
+
 
 # ---------------- GOALS ----------------
 
@@ -124,13 +121,9 @@ def daily_log(log: DailyLog):
 def dashboard():
 
     return {
-
         "profile": get_profile(),
-
         "goals": get_goals(),
-
         "today": get_today_log(),
-
         "days_logged": get_days_logged()
     }
 
@@ -149,17 +142,13 @@ def progress():
 def health_score():
 
     return {
-
         "score": calculate_health_score(),
-
         "improvement": get_health_improvement(),
-
         "history": get_health_score_history()
-
     }
 
 
-# ---------------- AI HEALTH REPORT ----------------
+# ---------------- HEALTH REPORT ----------------
 
 @app.get("/health-report")
 def health_report():
@@ -167,11 +156,11 @@ def health_report():
     report = generate_health_report()
 
     return {
-
         "report": report
-
     }
-# ---------------- BLOOD REPORT ----------------
+
+
+# ---------------- BLOOD REPORT OCR ----------------
 
 @app.post("/analyse-report")
 async def analyse_report(file: UploadFile = File(...)):
@@ -181,7 +170,5 @@ async def analyse_report(file: UploadFile = File(...)):
     analysis = annex_blood_report(extracted_text)
 
     return {
-
         "analysis": analysis
-
     }
