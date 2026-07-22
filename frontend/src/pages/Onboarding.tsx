@@ -102,7 +102,7 @@ export default function Onboarding() {
     try {
 
       const response = await fetch(
-        "import.meta.env.VITE_API_URL/profile",
+        `${import.meta.env.VITE_API_URL}/profile`,
         {
 
           method: "POST",

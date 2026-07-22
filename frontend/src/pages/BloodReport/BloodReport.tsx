@@ -44,7 +44,7 @@ export default function BloodReport() {
     try {
 
     const response = await fetch(
-        "http://import.meta.env.VITE_API_URL/analyse-report",
+        `${import.meta.env.VITE_API_URL}/analyse-report`,
         {
             method: "POST",
             body: formData,
