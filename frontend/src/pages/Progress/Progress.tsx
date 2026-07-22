@@ -55,7 +55,7 @@ export default function Progress() {
         try {
 
             const progressResponse = await fetch(
-                "http://127.0.0.1:8000/progress"
+                "http://import.meta.env.VITE_API_URL/progress"
             );
 
             const progressData = await progressResponse.json();
@@ -63,7 +63,7 @@ export default function Progress() {
             setProgress(progressData);
 
             const scoreResponse = await fetch(
-                "http://127.0.0.1:8000/health-score"
+                "http://import.meta.env.VITE_API_URL/health-score"
             );
 
             const scoreData = await scoreResponse.json();
